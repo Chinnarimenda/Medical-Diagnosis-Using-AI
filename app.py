@@ -36,6 +36,15 @@ def parkinsons_prediction(input_data):
 def main():
     st.title("AI-Powered Medical Diagnosis")
     st.sidebar.title("Navigation")
+    bg_image = """
+    <style>
+        .stApp {
+            background: url("https://img.freepik.com/free-vector/futuristic-science-lab-background_23-2148505015.jpg?t=st=1742035375~exp=1742038975~hmac=5511341db38707b2815c6d08abc8a7641985c1cde35cc523b63ba3b2db7b1d37&w=2000") no-repeat center fixed;
+            background-size: cover;
+        }
+    </style
+    """
+    st.markdown(bg_image,unsafe_allow_html=True)
     choice = st.sidebar.radio("Choose a Disease", ["Diabetes", "Thyroid", "Lung Cancer", "Parkinson's"])
 
     if choice == "Diabetes":
