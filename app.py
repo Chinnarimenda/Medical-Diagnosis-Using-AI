@@ -10,27 +10,39 @@ def load_model(model_path):
 
 # Diabetes Prediction
 def diabetes_prediction(input_data):
-    model = load_model('diabetes_model.pkl')
+    model = load_model('diabetes_model.pkl')[0]
     prediction = model.predict(input_data)
     return prediction
 
 # Thyroid Prediction
 def thyroid_prediction(input_data):
-    model = load_model('thyroid_model.pkl')
-    prediction = model.predict(input_data)
+    model, encoder = load_model('thyroid_model.pkl')
+    preprocessed_data = preprocess_input(input_data, encoder)
+    prediction = model.predict(preprocessed_data)
     return prediction
 
 # Lung Cancer Prediction
 def lung_cancer_prediction(input_data):
-    model = load_model('lung_cancer_model.pkl')
+    model = load_model('lung_cancer_model.pkl')[0]
     prediction = model.predict(input_data)
     return prediction
 
 # Parkinson's Prediction
 def parkinsons_prediction(input_data):
-    model = load_model('parkinsons_model.pkl')
+    model = load_model('parkinsons_model.pkl')[0]
     prediction = model.predict(input_data)
     return prediction
+
+# Preprocess input data
+def preprocess_input(input_data, encoder):
+    df = pd.DataFrame(input_data)
+    df.columns = df.columns.str.lower()  # Convert feature names to lowercase
+    categorical_features = df.select_dtypes(include=['object']).columns
+    encoded_categorical_data = encoder.transform(df[categorical_features])
+    encoded_categorical_df = pd.DataFrame(encoded_categorical_data, columns=encoder.get_feature_names_out(categorical_features))
+    df = df.drop(categorical_features, axis=1)
+    df = pd.concat([df, encoded_categorical_df], axis=1)
+    return df
 
 # Main App
 def main():
@@ -71,7 +83,7 @@ def main():
     elif choice == "Thyroid":
         st.header("Thyroid Disorder Prediction")
         age = st.number_input("Age", 0, 100)
-        sex = st.selectbox("Sex", ["Male", "Female"])
+        sex = st.selectbox("Sex", ["M", "F"])
         tsh = st.number_input("TSH Level", 0.0, 10.0)
         t3 = st.number_input("T3 Level", 0.0, 10.0)
         tt4 = st.number_input("TT4 Level", 0.0, 300.0)
