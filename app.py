@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
 # Load models
 def load_model(model_path):
@@ -23,13 +24,17 @@ def thyroid_prediction(input_data):
 
 # Lung Cancer Prediction
 def lung_cancer_prediction(input_data):
-    model = load_model('lung_cancer_model.pkl')[0]
+    model = load_model('lung_cancer_model.pkl')
+    label_encoder = LabelEncoder()
+    categorical_columns = ['Smoking', 'YellowFingers', 'Anxiety', 'PeerPressure', 'ChronicDisease', 'Fatigue', 'Allergy', 'Wheezing', 'AlcoholConsuming', 'Coughing', 'ShortnessOfBreath', 'SwallowingDifficulty', 'ChestPain']
+    for column in categorical_columns:
+        input_data[column] = label_encoder.fit_transform(input_data[column])
     prediction = model.predict(input_data)
     return prediction
 
 # Parkinson's Prediction
 def parkinsons_prediction(input_data):
-    model = load_model('parkinsons_model.pkl')[0]
+    model = load_model('parkinsons_model.pkl')
     prediction = model.predict(input_data)
     return prediction
 
